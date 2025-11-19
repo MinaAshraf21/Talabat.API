@@ -1,0 +1,32 @@
+[
+  {
+    "Name": "Chicken",
+    "CreatedBy": "1",
+    "LastModifiedBy": "1"
+  },
+  {
+    "Name": "Seafood",
+    "CreatedBy": "1",
+    "LastModifiedBy": "1"
+  },
+  {
+    "Name": "Pasta and Noodles",
+    "CreatedBy": "1",
+    "LastModifiedBy": "1"
+  },
+  {
+    "Name": "Soup",
+    "CreatedBy": "1",
+    "LastModifiedBy": "1"
+  },
+  {
+    "Name": "Desserts",
+    "CreatedBy": "1",
+    "LastModifiedBy": "1"
+  },
+  {
+    "Name": "Vegetable",
+    "CreatedBy": "1",
+    "LastModifiedBy": "1"
+  }
+]
