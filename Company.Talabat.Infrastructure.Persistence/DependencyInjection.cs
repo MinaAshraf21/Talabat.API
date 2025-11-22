@@ -12,10 +12,14 @@ namespace Company.Talabat.Infrastructure.Persistence
         {
             services.AddDbContext<StoreContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("StoreContext"));
+                options
+                .UseLazyLoadingProxies() // -> Enable Lazy Loading [proxy design pattern]
+                .UseSqlServer(configuration.GetConnectionString("StoreContext"));
             });
 
             services.AddScoped<IStoreContextInitializer, StoreContextInitializer>();
+
+            services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
 
             return services;
         }

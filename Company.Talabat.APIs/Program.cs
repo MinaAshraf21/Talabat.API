@@ -1,4 +1,5 @@
 using Company.Talabat.APIs.Extensions;
+using Company.Talabat.Application;
 using Company.Talabat.Domain.Contracts;
 using Company.Talabat.Infrastructure.Persistence;
 using Company.Talabat.Infrastructure.Persistence.Data;
@@ -20,7 +21,9 @@ namespace Company.Talabat.APIs
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services
+                   .AddControllers()
+                   .AddApplicationPart(typeof(Controllers.AssemblyInformation).Assembly);
 
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             //builder.Services.AddOpenApi();
@@ -29,6 +32,7 @@ namespace Company.Talabat.APIs
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddPersistenceServices(builder.Configuration);
+            builder.Services.AddApplicationServices();
             #endregion
 
             var app = builder.Build();
@@ -58,8 +62,9 @@ namespace Company.Talabat.APIs
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+            //app.UseAuthorization();
 
+            app.UseStaticFiles();
 
             app.MapControllers();
 

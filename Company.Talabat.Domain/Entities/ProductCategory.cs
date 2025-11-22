@@ -4,6 +4,6 @@
     {
         public required string Name { get; set; }
         // Navigation property
-        public ICollection<Product> Products { get; set; } = new List<Product>();
+        public virtual ICollection<Product> Products { get; set; } = new List<Product>();
     }
 }

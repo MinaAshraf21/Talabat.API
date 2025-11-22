@@ -1,14 +1,10 @@
 ﻿using Company.Talabat.Domain.Common;
 using Company.Talabat.Domain.Contracts;
+using Company.Talabat.Domain.Contracts.Persistence;
 using Company.Talabat.Infrastructure.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Company.Talabat.Infrastructure.Persistence.Repositories
+namespace Company.Talabat.Infrastructure.Persistence.Repositories.GenericRepository
 {
     internal class GenericRepository<TEntity, TKey>(StoreContext _storeContext) : IGenericRepository<TEntity, TKey>
         where TEntity : BaseEntity<TKey>
@@ -20,6 +16,17 @@ namespace Company.Talabat.Infrastructure.Persistence.Repositories
                 return await _storeContext.Set<TEntity>().ToListAsync();
             return await _storeContext.Set<TEntity>().AsNoTracking().ToListAsync();
 
+        }
+
+        public async Task<IEnumerable<TEntity>> GetAllWithSpecsAsync(ISpecification<TEntity, TKey> specification, bool withTracking = false)
+        {
+
+            var query = _storeContext.Set<TEntity>().AsQueryable();
+            query = SpecificationsEvaluator<TEntity, TKey>.GetQuery(query, specification);
+
+            return withTracking
+                ? await query.ToListAsync()
+                : await query.AsNoTracking().ToListAsync();
         }
 
         public async Task<TEntity?> GetByIdAsync(TKey id)

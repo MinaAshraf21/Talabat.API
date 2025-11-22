@@ -6,4 +6,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="15.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Company.Talabat.Application.Abstractions\Company.Talabat.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\Company.Talabat.Domain\Company.Talabat.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

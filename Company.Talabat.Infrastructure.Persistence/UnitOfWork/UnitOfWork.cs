@@ -14,10 +14,10 @@ namespace Company.Talabat.Infrastructure.Persistence.UnitOfWork
         //when working asyncronously it's better to use Concurrent data structures
         private readonly ConcurrentDictionary<string, object> _repositories;
 
-        public UnitOfWork(StoreContext storeContext , ConcurrentDictionary<string ,object> repositories)
+        public UnitOfWork(StoreContext storeContext)
         {
             _storeContext = storeContext;
-            _repositories = repositories;
+            _repositories = new ConcurrentDictionary<string, object>();
         }
 
         public IGenericRepository<TEntity, TKey> GetRepository<TEntity, TKey>()
@@ -34,14 +34,14 @@ namespace Company.Talabat.Infrastructure.Persistence.UnitOfWork
             return (IGenericRepository<TEntity, TKey>)_repositories.GetOrAdd(nameof(TEntity), new GenericRepository<TEntity, TKey>(_storeContext));
         }
 
-        public Task<int> CompleteAsync()
+        public async Task<int> CompleteAsync()
         {
-            throw new NotImplementedException();
+            return await _storeContext.SaveChangesAsync();
         }
 
         public ValueTask DisposeAsync()
         {
-            throw new NotImplementedException();
+            return _storeContext.DisposeAsync();
         }
 
     }

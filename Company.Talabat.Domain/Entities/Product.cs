@@ -12,7 +12,7 @@
         public int? BrandId { get; set; }
 
         // Navigation properties
-        public ProductCategory? Category { get; set; }
-        public ProductBrand? Brand { get; set; }
+        public virtual ProductCategory? Category { get; set; }
+        public virtual ProductBrand? Brand { get; set; }
     }
 }
