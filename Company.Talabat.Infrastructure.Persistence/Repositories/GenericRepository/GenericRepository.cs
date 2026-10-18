@@ -29,11 +29,26 @@ namespace Company.Talabat.Infrastructure.Persistence.Repositories.GenericReposit
                 : await query.AsNoTracking().ToListAsync();
         }
 
+        public async Task<int> GetCountAsync(ISpecification<TEntity, TKey> specification)
+        {
+            var query = _storeContext.Set<TEntity>().AsQueryable();
+
+            query = SpecificationsEvaluator<TEntity,TKey>.GetQuery(query, specification);
+
+            return await query.CountAsync();
+        }
+
         public async Task<TEntity?> GetByIdAsync(TKey id)
         {
             return await _storeContext.FindAsync<TEntity>(id);
         }
+        public async Task<TEntity> GetWithSpecsAsync(ISpecification<TEntity, TKey> specification)
+        {
+            var query = _storeContext.Set<TEntity>();
+            var el = await SpecificationsEvaluator<TEntity, TKey>.GetQuery(query, specification).FirstOrDefaultAsync();
 
+            return el;
+        }
         public async Task AddAsync(TEntity entity) => await _storeContext.AddAsync(entity);
 
         public void Delete(TEntity entity) => _storeContext.Remove(entity);

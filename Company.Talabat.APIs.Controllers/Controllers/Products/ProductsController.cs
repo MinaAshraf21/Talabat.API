@@ -1,23 +1,19 @@
 ﻿using Company.Talabat.APIs.Controllers.Controllers.Base;
+using Company.Talabat.Application.Abstractions.Common;
 using Company.Talabat.Application.Abstractions.DTOs.Products;
 using Company.Talabat.Application.Abstractions.Services;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Company.Talabat.APIs.Controllers.Controllers.Products
 {
-   [Route("/api/[controller]/")]
     public class ProductsController(IServiceManager _serviceManager) : BaseApiController
     {
 
         [HttpGet] //GET: /api/products
-        public async Task<ActionResult<IEnumerable<ProductToReturnDto>>> GetAllProducts()
+        public async Task<ActionResult<Pagination<ProductToReturnDto>>> GetAllProducts
+            ([FromQuery]ProductsSpecificationParameters specParams)
         {
-            var products = await _serviceManager.ProductService.GetProductsAsync();
+            var products = await _serviceManager.ProductService.GetProductsAsync(specParams);
             return Ok(products);
         }
 
@@ -25,7 +21,7 @@ namespace Company.Talabat.APIs.Controllers.Controllers.Products
         public async Task<ActionResult<ProductToReturnDto>> GetProduct(int id)
         {
             var product = await _serviceManager.ProductService.GetProductAsync(id);
-            if (product == null) return NotFound();
+            if (product == null) return NotFound(new {StatusCode = 404 , Message = "Not Found!"});
             return Ok(product);
         }
 

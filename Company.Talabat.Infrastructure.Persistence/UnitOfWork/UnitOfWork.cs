@@ -1,8 +1,7 @@
 ﻿using Company.Talabat.Domain.Common;
 using Company.Talabat.Domain.Contracts;
-using Company.Talabat.Domain.Entities;
 using Company.Talabat.Infrastructure.Persistence.Data;
-using Company.Talabat.Infrastructure.Persistence.Repositories;
+using Company.Talabat.Infrastructure.Persistence.Repositories.GenericRepository;
 using System.Collections.Concurrent;
 
 namespace Company.Talabat.Infrastructure.Persistence.UnitOfWork
@@ -24,13 +23,6 @@ namespace Company.Talabat.Infrastructure.Persistence.UnitOfWork
             where TEntity : BaseEntity<TKey>
             where TKey : IEquatable<TKey>
         {
-            ////if (_repositories.ContainsKey(nameof(TEntity)))
-            ////    return (IGenericRepository<TEntity, TKey>) _repositories[nameof(TEntity)];
-
-            ////var repository = new GenericRepository<TEntity, TKey>(_storeContext);
-            ////_repositories.Add(nameof(TEntity), repository);
-            ////return repository;
-
             return (IGenericRepository<TEntity, TKey>)_repositories.GetOrAdd(nameof(TEntity), new GenericRepository<TEntity, TKey>(_storeContext));
         }
 

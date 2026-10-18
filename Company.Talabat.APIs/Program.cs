@@ -1,3 +1,4 @@
+using Company.Talabat.APIs.Controllers.Erros;
 using Company.Talabat.APIs.Extensions;
 using Company.Talabat.Application;
 using Company.Talabat.Domain.Contracts;
@@ -23,7 +24,24 @@ namespace Company.Talabat.APIs
 
             builder.Services
                    .AddControllers()
-                   .AddApplicationPart(typeof(Controllers.AssemblyInformation).Assembly);
+                   .AddApplicationPart(typeof(Controllers.AssemblyInformation).Assembly)
+                   .ConfigureApiBehaviorOptions(options =>
+                   {
+                       options.SuppressModelStateInvalidFilter = false; // will not execute any endpoint if the model state is invalid
+                       options.InvalidModelStateResponseFactory = context =>
+                       {
+                           return new BadRequestObjectResult(new ApiValidationErrorResponse()
+                           {
+                               Errors = context.ModelState
+                                    .Where(e => e.Value.Errors.Count > 0)
+                                    .Select(e => new ApiValidationErrorResponse.ValidationError()
+                                    {
+                                        Field = e.Key,
+                                        Errors = e.Value.Errors.Select(e => e.ErrorMessage)
+                                    })
+                           });
+                       };
+                   });
 
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             //builder.Services.AddOpenApi();
