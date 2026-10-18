@@ -1,0 +1,59 @@
+using Talabat.Domain.Common;
+using Talabat.Domain.Contracts;
+using Talabat.Domain.Contracts.Persistence;
+using Talabat.Infrastructure.Persistence.Data;
+using Microsoft.EntityFrameworkCore;
+
+namespace Talabat.Infrastructure.Persistence.Repositories.GenericRepository
+{
+    internal class GenericRepository<TEntity, TKey>(StoreContext _storeContext) : IGenericRepository<TEntity, TKey>
+        where TEntity : BaseEntity<TKey>
+        where TKey : IEquatable<TKey>
+    {
+        public async Task<IEnumerable<TEntity>> GetAllAsync(bool withTracking = false)
+        {
+            if (withTracking)
+                return await _storeContext.Set<TEntity>().ToListAsync();
+            return await _storeContext.Set<TEntity>().AsNoTracking().ToListAsync();
+
+        }
+
+        public async Task<IEnumerable<TEntity>> GetAllWithSpecsAsync(ISpecification<TEntity, TKey> specification, bool withTracking = false)
+        {
+
+            var query = _storeContext.Set<TEntity>().AsQueryable();
+            query = SpecificationsEvaluator<TEntity, TKey>.GetQuery(query, specification);
+
+            return withTracking
+                ? await query.ToListAsync()
+                : await query.AsNoTracking().ToListAsync();
+        }
+
+        public async Task<int> GetCountAsync(ISpecification<TEntity, TKey> specification)
+        {
+            var query = _storeContext.Set<TEntity>().AsQueryable();
+
+            query = SpecificationsEvaluator<TEntity,TKey>.GetQuery(query, specification);
+
+            return await query.CountAsync();
+        }
+
+        public async Task<TEntity?> GetByIdAsync(TKey id)
+        {
+            return await _storeContext.FindAsync<TEntity>(id);
+        }
+        public async Task<TEntity> GetWithSpecsAsync(ISpecification<TEntity, TKey> specification)
+        {
+            var query = _storeContext.Set<TEntity>();
+            var el = await SpecificationsEvaluator<TEntity, TKey>.GetQuery(query, specification).FirstOrDefaultAsync();
+
+            return el;
+        }
+        public async Task AddAsync(TEntity entity) => await _storeContext.AddAsync(entity);
+
+        public void Delete(TEntity entity) => _storeContext.Remove(entity);
+
+        public void Update(TEntity entity) => _storeContext.Update(entity);
+
+    }
+}

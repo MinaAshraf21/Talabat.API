@@ -1,1 +1,1 @@
-# Company.Talabat
+# Talabat
