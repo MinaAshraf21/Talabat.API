@@ -1,11 +1,12 @@
+using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Talabat.APIs.Controllers.Erros;
 using Talabat.APIs.Extensions;
+using Talabat.APIs.Middlewares;
 using Talabat.Application;
-using Talabat.Domain.Contracts;
+using Talabat.Infrastructure;
 using Talabat.Infrastructure.Persistence;
-using Talabat.Infrastructure.Persistence.Data;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Talabat.APIs
 {
@@ -24,6 +25,15 @@ namespace Talabat.APIs
 
             builder.Services
                    .AddControllers()
+                   .AddNewtonsoftJson(options =>
+                   {
+                       options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+                   })
+                   .AddJsonOptions(op =>
+                   {
+                       op.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                       op.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                   })
                    .AddApplicationPart(typeof(Controllers.AssemblyInformation).Assembly)
                    .ConfigureApiBehaviorOptions(options =>
                    {
@@ -33,11 +43,11 @@ namespace Talabat.APIs
                            return new BadRequestObjectResult(new ApiValidationErrorResponse()
                            {
                                Errors = context.ModelState
-                                    .Where(e => e.Value.Errors.Count > 0)
+                                    .Where(e => e.Value!.Errors.Count > 0)
                                     .Select(e => new ApiValidationErrorResponse.ValidationError()
                                     {
                                         Field = e.Key,
-                                        Errors = e.Value.Errors.Select(e => e.ErrorMessage)
+                                        Errors = e.Value!.Errors.Select(e => e.ErrorMessage)
                                     })
                            });
                        };
@@ -50,6 +60,7 @@ namespace Talabat.APIs
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddPersistenceServices(builder.Configuration);
+            builder.Services.AddInfrastructureServices(builder.Configuration);
             builder.Services.AddApplicationServices();
             #endregion
 
@@ -69,7 +80,7 @@ namespace Talabat.APIs
             #endregion         
 
             #region Configure Kestral Middlewares
-
+            app.UseMiddleware<ExceptionHandlerMiddleware>();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -80,7 +91,7 @@ namespace Talabat.APIs
 
             app.UseHttpsRedirection();
 
-            //app.UseAuthorization();
+            app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
             app.UseStaticFiles();
 

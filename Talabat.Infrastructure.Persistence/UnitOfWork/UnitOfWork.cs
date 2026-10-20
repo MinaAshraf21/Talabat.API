@@ -1,8 +1,8 @@
 using Talabat.Domain.Common;
-using Talabat.Domain.Contracts;
 using Talabat.Infrastructure.Persistence.Data;
 using Talabat.Infrastructure.Persistence.Repositories.GenericRepository;
 using System.Collections.Concurrent;
+using Talabat.Domain.Contracts.Persistence;
 
 namespace Talabat.Infrastructure.Persistence.UnitOfWork
 {

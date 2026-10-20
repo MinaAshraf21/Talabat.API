@@ -1,10 +1,9 @@
-using Talabat.APIs.Controllers.Controllers.Base;
 using Talabat.Application.Abstractions.Common;
 using Talabat.Application.Abstractions.DTOs.Products;
 using Talabat.Application.Abstractions.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Talabat.APIs.Controllers.Controllers.Products
+namespace Talabat.APIs.Controllers.Controllers
 {
     public class ProductsController(IServiceManager _serviceManager) : BaseApiController
     {
@@ -21,7 +20,6 @@ namespace Talabat.APIs.Controllers.Controllers.Products
         public async Task<ActionResult<ProductToReturnDto>> GetProduct(int id)
         {
             var product = await _serviceManager.ProductService.GetProductAsync(id);
-            if (product == null) return NotFound(new {StatusCode = 404 , Message = "Not Found!"});
             return Ok(product);
         }
 

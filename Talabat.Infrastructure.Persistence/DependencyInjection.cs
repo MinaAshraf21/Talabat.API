@@ -1,8 +1,8 @@
-using Talabat.Domain.Contracts;
 using Talabat.Infrastructure.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Talabat.Domain.Contracts.Persistence;
 
 namespace Talabat.Infrastructure.Persistence
 {

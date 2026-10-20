@@ -1,4 +1,4 @@
-using Talabat.Domain.Contracts.Persistence;
+using Talabat.Domain.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;

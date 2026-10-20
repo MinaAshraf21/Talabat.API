@@ -1,4 +1,4 @@
-using Talabat.Domain.Entities;
+using Talabat.Domain.Entities.Products;
 
 namespace Talabat.Domain.Specifications.Products
 {
@@ -47,12 +47,13 @@ namespace Talabat.Domain.Specifications.Products
 
         private protected override void AddSorting(string? sort)
         {
+            
             switch (sort)
             {
-                case "priceAsc":
+                case "priceasc":
                     AddOrderBy(e => e.Price);
                     break;
-                case "priceDesc":
+                case "pricedesc":
                     AddOrderByDescending(e => e.Price);
                     break;
                 default:

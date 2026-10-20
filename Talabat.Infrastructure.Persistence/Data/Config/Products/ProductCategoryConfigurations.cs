@@ -1,10 +1,10 @@
-using Talabat.Domain.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Talabat.Domain.Entities.Products;
 
 namespace Talabat.Infrastructure.Persistence.Data.Config.Products
 {

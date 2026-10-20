@@ -1,6 +1,6 @@
-using Talabat.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using Talabat.Domain.Entities.Products;
 
 namespace Talabat.Infrastructure.Persistence.Data
 {

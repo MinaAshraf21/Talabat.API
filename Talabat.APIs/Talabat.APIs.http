@@ -1,6 +1,15 @@
-@HostAddress = http://localhost:5110
+@baseUrl = http://localhost:5110
 
-GET {{HostAddress}}/weatherforecast/
+GET {{baseUrl}}/api/weatherforecast/
 Accept: application/json
 
 ###
+GET {{baseUrl}}/api/products?sort=PRICEDESC
+###
+GET {{baseUrl}}/api/products?sort=priceasc
+###
+GET {{baseUrl}}/api/products/500
+###
+GET {{baseUrl}}/api/buggy/server-error
+###
+GET {{baseUrl}}/api/haaland

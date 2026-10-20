@@ -9,7 +9,6 @@ namespace Talabat.Application.Abstractions.DTOs.Products
     public class ProductsSpecificationParameters
     {
         private const int MAX_PAGE_SIZE = 50;
-        public string? Sort { get; set; }
         public int? CategoryId { get; set; }
         public int? BrandId { get; set; }
 
@@ -17,15 +16,28 @@ namespace Talabat.Application.Abstractions.DTOs.Products
         public int PageSize
         {
             get => _pageSize;
-            set => _pageSize = value > MAX_PAGE_SIZE ? MAX_PAGE_SIZE : value; 
+            set => _pageSize = value < 0 ? 5 : Math.Min(value, MAX_PAGE_SIZE);
         }
-        public int PageIndex { get; set; } = 1;
+
+        private int _pageIndex = 1;
+        public int PageIndex
+        {
+            get => _pageIndex;
+            set => _pageIndex = value < 1 ? 1 : value; 
+        }
 
         private string? search;
         public string? Search
         {
             get => search;
             set => search = value?.ToLower();
+        }
+
+        private string? sort;
+        public string? Sort
+        {
+            get => sort;
+            set => sort = value?.ToLower();
         }
 
     }

@@ -1,15 +1,15 @@
 using AutoMapper;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 using Talabat.Application.Abstractions.Services;
+using Talabat.Application.Abstractions.Services.Basket;
 using Talabat.Application.Abstractions.Services.Products;
 using Talabat.Application.Mapping;
+using Talabat.Application.Services.Baskets;
 using Talabat.Application.Services.Products;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using Talabat.Domain.Contracts.Infrastructure;
+using Talabat.Domain.Contracts.Persistence;
 
 namespace Talabat.Application
 {
@@ -25,6 +25,23 @@ namespace Talabat.Application
             services.AddScoped<ProductImageUrlResolver>();
 
             services.AddScoped<IServiceManager, Services.ServiceManager>();
+
+            services.AddScoped(typeof(Func<IBasketService>), sp =>
+            {
+                var config = sp.GetRequiredService<IConfiguration>();
+                var mapper = sp.GetRequiredService<IMapper>();
+                var repo = sp.GetRequiredService<IBasketRepository>();
+
+                return () => new BasketService(repo, mapper, config);
+            });
+
+            services.AddScoped(typeof(Func<IProductService>), sp =>
+            {
+                var uow = sp.GetRequiredService<IUnitOfWork>();
+                var mapper = sp.GetRequiredService<IMapper>();
+
+                return () => new ProductService(uow, mapper);
+            });
 
             return services;
         }

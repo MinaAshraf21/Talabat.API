@@ -2,8 +2,9 @@ using AutoMapper;
 using Talabat.Application.Abstractions.Common;
 using Talabat.Application.Abstractions.DTOs.Products;
 using Talabat.Application.Abstractions.Services.Products;
-using Talabat.Domain.Contracts;
-using Talabat.Domain.Entities;
+using Talabat.Application.Exceptions;
+using Talabat.Domain.Contracts.Persistence;
+using Talabat.Domain.Entities.Products;
 using Talabat.Domain.Specifications.Products;
 
 namespace Talabat.Application.Services.Products
@@ -42,6 +43,8 @@ namespace Talabat.Application.Services.Products
             var spec = new ProductWithBrandAndCategorySpecifications(id);
             var product = await _unitOfWork.GetRepository<Product, int>().GetWithSpecsAsync(spec);
 
+            if (product is null)
+                throw new NotFoundException(nameof(Product), id);
             var productDto = _mapper.Map<ProductToReturnDto>(product);
 
             return productDto;
